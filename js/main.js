@@ -3,9 +3,12 @@ const gameHeight = 640;
 
 Crafty.init(gameWidth, gameHeight, document.getElementById('game'));
 Crafty.background('#566c86');
+Crafty.sprite("../resources/images/head.png", {head: [0,0,32,32]});
+Crafty.sprite("../resources/images/segment.png", {segment: [0,0,32,32]});
 
 const baseSize = 32;
 let gameStart = false;
+let gameOver = false;
 let direction = "up";
 let segments = [];
 let id = -1;
@@ -49,23 +52,29 @@ function createEat() {
     eat.place(rnd_x, rnd_y);
 }
 
-function checkNextPos(x, y) {
-    if (eat) {
-        if (x == eat.x && y == eat.y) {
-            segments.push(Crafty.e("Segment").attr({
-                x: segments[segments.length - 1].x,
-                y: segments[segments.length - 1].y
-            }));
-            eat.destroy();
-            createEat();
+function checkNextPos(x, y) { 
+    if (x == eat.x && y == eat.y) {
+        segments.push(Crafty.e("Segment").attr({
+            x: segments[segments.length - 1].x,
+            y: segments[segments.length - 1].y
+        }));
+        eat.destroy();
+        createEat();
+    }
+    for (let segment of segments) {
+        if (x == segment.x && y == segment.y) {
+            Crafty.trigger("GameOver");
+            gameOver = true;
+            return true;
         }
     }
+    
 }
 
 Crafty.c("Head", {
     init: function() {
         baseOptions.bind(this)();
-        this.addComponent("Delay");
+        this.addComponent("Delay, head");
         this.x = gameWidth - (baseSize * 5);
         this.y = gameHeight - (baseSize * 7);
         
@@ -73,22 +82,22 @@ Crafty.c("Head", {
             switch(direction) {
                 case "up":
                     this.changePrev(this.x, this.y);
-                    checkNextPos(this.x, this.y - baseSize);
+                    if (checkNextPos(this.x, this.y - baseSize)) break;
                     this.y -= baseSize;
                     break;
                 case "left":
                     this.changePrev(this.x, this.y);
-                    checkNextPos(this.x - baseSize, this.y);
+                    if (checkNextPos(this.x - baseSize, this.y)) break;
                     this.x -= baseSize;
                     break;
                 case "right":
                     this.changePrev(this.x, this.y);
-                    checkNextPos(this.x + baseSize, this.y);
+                    if (checkNextPos(this.x + baseSize, this.y)) break;
                     this.x += baseSize;
                     break;
                 case "down":
                     this.changePrev(this.x, this.y);
-                    checkNextPos(this.x, this.y + baseSize);
+                    if (checkNextPos(this.x, this.y + baseSize)) break;
                     this.y += baseSize;
                     break; 
             }
@@ -97,7 +106,7 @@ Crafty.c("Head", {
             Crafty.trigger("Tick");
         }
         this.bind("GameStart", function() {
-            this.delay(this.tick, 1000, -1);
+            this.delay(this.tick, 250, -1);
         });
         this.bind("GameOver", function() {
             this.cancelDelay(this.tick);
@@ -109,10 +118,13 @@ Crafty.c("Head", {
 Crafty.c("Segment", {
     init: function() {
         baseOptions.bind(this)();
+        this.addComponent("segment");
         this.bind("Tick", function() {
             this.changePrev(this.x, this.y);
-            this.x = segments[this.id - 1].x_prev;
-            this.y = segments[this.id - 1].y_prev;
+            if (!gameOver) {
+                this.x = segments[this.id - 1].x_prev;
+                this.y = segments[this.id - 1].y_prev;
+            }
         });
     }
 });
