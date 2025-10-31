@@ -9,6 +9,7 @@ let gameStart = false;
 let direction = "up";
 let segments = [];
 let id = -1;
+let eat;
 
 function snakeInitial() {
     segments.push(Crafty.e("Head"));
@@ -44,7 +45,21 @@ function createEat() {
             return createEat();
         }
     }
-    Crafty.e("Eat").place(rnd_x, rnd_y);
+    eat = Crafty.e("Eat");
+    eat.place(rnd_x, rnd_y);
+}
+
+function checkNextPos(x, y) {
+    if (eat) {
+        if (x == eat.x && y == eat.y) {
+            segments.push(Crafty.e("Segment").attr({
+                x: segments[segments.length - 1].x,
+                y: segments[segments.length - 1].y
+            }));
+            eat.destroy();
+            createEat();
+        }
+    }
 }
 
 Crafty.c("Head", {
@@ -58,18 +73,22 @@ Crafty.c("Head", {
             switch(direction) {
                 case "up":
                     this.changePrev(this.x, this.y);
+                    checkNextPos(this.x, this.y - baseSize);
                     this.y -= baseSize;
                     break;
                 case "left":
                     this.changePrev(this.x, this.y);
+                    checkNextPos(this.x - baseSize, this.y);
                     this.x -= baseSize;
                     break;
                 case "right":
                     this.changePrev(this.x, this.y);
+                    checkNextPos(this.x + baseSize, this.y);
                     this.x += baseSize;
                     break;
                 case "down":
                     this.changePrev(this.x, this.y);
+                    checkNextPos(this.x, this.y + baseSize);
                     this.y += baseSize;
                     break; 
             }
@@ -138,6 +157,7 @@ Crafty.c("Controller", {
                 }
             } 
             if (e.key == Crafty.keys.NUMPAD_0) Crafty.trigger("GameOver");
+            if (e.key == Crafty.keys.NUMPAD_1) Crafty.log(eat);
         });
         this.bind("GameStart", function() {
             createEat();
