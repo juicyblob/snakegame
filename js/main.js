@@ -3,8 +3,23 @@ const gameHeight = 640;
 
 Crafty.init(gameWidth, gameHeight, document.getElementById('game'));
 Crafty.background('#566c86');
-Crafty.sprite("../resources/images/head.png", {head: [0,0,32,32]});
-Crafty.sprite("../resources/images/segment.png", {segment: [0,0,32,32]});
+
+const assetsObj = {
+    "images": ["../resources/images/head.png", "../resources/images/segment.png"],
+};
+
+function setupSprites() {
+    Crafty.sprite("../resources/images/head.png", {head: [0,0,32,32]});
+    Crafty.sprite("../resources/images/segment.png", {segment: [0,0,32,32]});
+}
+
+Crafty.load(assetsObj, function() {
+    setupSprites();
+    Crafty.scene("Main");
+});
+
+
+Crafty.defineScene("Main", () => {
 
 const baseSize = 32;
 let gameStart = false;
@@ -180,3 +195,7 @@ Crafty.c("Controller", {
 Crafty.e("Controller");
 
 snakeInitial();
+
+
+});
+
