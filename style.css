@@ -1,0 +1,9 @@
+@font-face {
+	font-display: swap; 
+    font-family: "ChangaOne";
+    src: url('./resources/fonts/ChangaOne-Regular.woff2') format("woff2"),  
+         url('./resources/fonts/ChangaOne-Regular.woff') format("woff");
+    
+    font-weight: 400;
+    font-style: normal;
+}

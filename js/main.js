@@ -86,6 +86,11 @@ function checkNextPos(x, y) {
     
 }
 
+function withGameOver() {
+    eat.destroy();
+    Crafty.e("dataText");
+}
+
 Crafty.c("Head", {
     init: function() {
         baseOptions.bind(this)();
@@ -161,6 +166,22 @@ Crafty.c("Eat", {
     }
 });
 
+Crafty.c("dataText", {
+    init: function() {
+        this.addComponent("2D, DOM, Text");
+        this.w = 160;
+        this.h = 20;
+        this.x = gameWidth/2 - this.w / 2;
+        this.y = gameHeight/2 - this.h / 2;
+        this.textFont({
+            family: "ChangaOne",
+            size: "32px",
+        });
+        this.textColor("white");
+        this.text("Game Over");
+    }
+});
+
 Crafty.c("Controller", {
     init: function() {
         this.addComponent("Keyboard");
@@ -183,11 +204,12 @@ Crafty.c("Controller", {
                     Crafty.trigger("GameStart");
                 }
             } 
-            if (e.key == Crafty.keys.NUMPAD_0) Crafty.trigger("GameOver");
-            if (e.key == Crafty.keys.NUMPAD_1) Crafty.log(eat);
         });
         this.bind("GameStart", function() {
             createEat();
+        });
+        this.bind("GameOver", function() {
+            withGameOver();
         });
     }
 });
@@ -195,7 +217,6 @@ Crafty.c("Controller", {
 Crafty.e("Controller");
 
 snakeInitial();
-
 
 });
 
