@@ -1,3 +1,7 @@
+:root {
+    font-size: 16px;
+}
+
 @font-face {
 	font-display: swap; 
     font-family: "ChangaOne";
@@ -6,4 +10,62 @@
     
     font-weight: 400;
     font-style: normal;
+}
+
+body {
+    font-family: "ChangaOne", sans-serif;
+    background-color: #004645;
+}
+
+.stat-panel {
+    width: 640px;
+    font-size: 1.4rem;
+    padding: 16px 32px;
+    box-sizing: border-box;
+    background-color: #ffa300;
+    color: #1d2b53;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & .stat-panel__left {
+        display: flex;
+        align-items: center;
+    }
+
+    & .stat-panel__right {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        & .btn-sound {
+            border: none;
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+            background-color: transparent;
+            background: url("./resources/images/sound_on.svg");
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 22px;
+            height: 17px;
+        }
+
+        & .btn-info {
+            border: none;
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+            background-color: transparent;
+            background: url("./resources/images/info.svg");
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    & .stat-panel__item {
+        width: 128px;
+    }
 }

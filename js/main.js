@@ -1,16 +1,24 @@
 const gameWidth = 640;
-const gameHeight = 640;
+const gameHeight = 480;
 
 Crafty.init(gameWidth, gameHeight, document.getElementById('game'));
-Crafty.background('#566c86');
+Crafty.background('#007958 url(/resources/images/grid.png) repeat');
 
 const assetsObj = {
-    "images": ["../resources/images/head.png", "../resources/images/segment.png"],
+    "images": [
+        "../resources/images/head.png", 
+        "../resources/images/segment.png", 
+        "../resources/images/food.png", 
+        "../resources/images/grid.png",
+        "../resources/images/play.png"
+    ],
 };
 
 function setupSprites() {
     Crafty.sprite("../resources/images/head.png", {head: [0,0,32,32]});
     Crafty.sprite("../resources/images/segment.png", {segment: [0,0,32,32]});
+    Crafty.sprite("../resources/images/food.png", {food: [0,0,32,32]});
+    Crafty.sprite("../resources/images/play.png", {play: [0,0,64,64]});
 }
 
 Crafty.load(assetsObj, function() {
@@ -57,7 +65,7 @@ function baseOptions() {
 
 function createEat() {
     let rnd_x = Crafty.math.randomInt(1, 18) * baseSize;
-    let rnd_y = Crafty.math.randomInt(1, 18) * baseSize;
+    let rnd_y = Crafty.math.randomInt(1, 13) * baseSize;
     for (let segment of segments) {
         if (rnd_x == segment.x && rnd_y == segment.y) {
             return createEat();
@@ -151,14 +159,14 @@ Crafty.c("Segment", {
 
 Crafty.c("Eat", {
     init: function() {
-        this.addComponent("2D, WebGL, Color, Renderable, Delay");
+        this.addComponent("2D, WebGL, Color, Renderable, Delay, food");
         this.color("#b13e53");
         this.w = baseSize;
         this.h = baseSize;
         this.z = 100;
         this.delay(() => {
             this.visible = !this.visible;
-        }, 300, -1);
+        }, 500, -1);
     },
     place: function(x, y) {
         this.x = x;
@@ -172,7 +180,7 @@ Crafty.c("dataText", {
         this.w = 160;
         this.h = 20;
         this.x = gameWidth/2 - this.w / 2;
-        this.y = gameHeight/2 - this.h / 2;
+        this.y = gameHeight/2 - this.h - 32;
         this.textFont({
             family: "ChangaOne",
             size: "32px",
@@ -214,9 +222,32 @@ Crafty.c("Controller", {
     }
 });
 
+Crafty.c("PlayButton", {
+    init: function() {
+        this.addComponent("2D, DOM, Mouse, play");
+        this.w = 64;
+        this.h = 64;
+        this.alpha = 1.0;
+        this.x = gameWidth / 2 - this.w / 2;
+        this.y = gameHeight / 2 - this.h;
+        this.css({
+            "cursor": "pointer"
+        });
+        this.bind("Click", function() {
+            if (!gameStart) {
+                this.destroy();
+                gameStart = true;
+                Crafty.trigger("GameStart");
+            }
+        });
+    }
+});
+
 Crafty.e("Controller");
 
 snakeInitial();
+
+Crafty.e("PlayButton");
 
 });
 
