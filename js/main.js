@@ -33,6 +33,7 @@ const baseSize = 32;
 let gameStart = false;
 let gameOver = false;
 let direction = "up";
+let canChangeDir = false;
 let segments = [];
 let id = -1;
 let eat;
@@ -87,16 +88,16 @@ function checkNextPos(x, y) {
     for (let segment of segments) {
         if (x == segment.x && y == segment.y) {
             Crafty.trigger("GameOver");
-            gameOver = true;
             return true;
         }
     }
-    
 }
 
 function withGameOver() {
+    gameOver = true;
     eat.destroy();
     Crafty.e("dataText");
+    canChangeDir = false;
 }
 
 Crafty.c("Head", {
@@ -111,22 +112,42 @@ Crafty.c("Head", {
                 case "up":
                     this.changePrev(this.x, this.y);
                     if (checkNextPos(this.x, this.y - baseSize)) break;
+                    if (this.y == 0) {
+                        Crafty.trigger("GameOver");
+                        break;
+                    }
                     this.y -= baseSize;
+                    if (!canChangeDir) canChangeDir = true;
                     break;
                 case "left":
                     this.changePrev(this.x, this.y);
                     if (checkNextPos(this.x - baseSize, this.y)) break;
+                    if (this.x == 0) {
+                        Crafty.trigger("GameOver");
+                        break;
+                    }
                     this.x -= baseSize;
+                    if (!canChangeDir) canChangeDir = true;
                     break;
                 case "right":
                     this.changePrev(this.x, this.y);
                     if (checkNextPos(this.x + baseSize, this.y)) break;
+                    if (this.x == gameWidth - baseSize) {
+                        Crafty.trigger("GameOver");
+                        break;
+                    }
                     this.x += baseSize;
+                    if (!canChangeDir) canChangeDir = true;
                     break;
                 case "down":
                     this.changePrev(this.x, this.y);
                     if (checkNextPos(this.x, this.y + baseSize)) break;
+                    if (this.y == gameHeight - baseSize) {
+                        Crafty.trigger("GameOver");
+                        break;
+                    }
                     this.y += baseSize;
+                    if (!canChangeDir) canChangeDir = true;
                     break; 
             }
         });
@@ -195,17 +216,29 @@ Crafty.c("Controller", {
         this.addComponent("Keyboard");
         this.bind("KeyDown", function(e) {
             if (e.key == Crafty.keys.LEFT_ARROW) {
-                if (direction != "right") direction = "left";
+                if (direction != "right" && canChangeDir) {
+                    canChangeDir = false;
+                    direction = "left";
+                } 
             } 
             if (e.key == Crafty.keys.RIGHT_ARROW) {
-                if (direction != "left") direction = "right";
+                if (direction != "left" && canChangeDir) {
+                    canChangeDir = false;
+                    direction = "right";
+                } 
              } 
             if (e.key == Crafty.keys.UP_ARROW) {
-                if (direction != "down") direction = "up";
+                if (direction != "down" && canChangeDir) {
+                    canChangeDir = false;
+                    direction = "up";
+                } 
             } 
             if (e.key == Crafty.keys.DOWN_ARROW) {
-                if (direction != "up") direction = "down";
-            } 
+                if (direction != "up" && canChangeDir) {
+                    canChangeDir = false;
+                    direction = "down";
+                } 
+            }
             if (e.key == Crafty.keys.ENTER) {
                 if (!gameStart) {
                     gameStart = true;
@@ -215,6 +248,8 @@ Crafty.c("Controller", {
         });
         this.bind("GameStart", function() {
             createEat();
+            playBtn.destroy();
+            canChangeDir = true;
         });
         this.bind("GameOver", function() {
             withGameOver();
@@ -235,7 +270,6 @@ Crafty.c("PlayButton", {
         });
         this.bind("Click", function() {
             if (!gameStart) {
-                this.destroy();
                 gameStart = true;
                 Crafty.trigger("GameStart");
             }
@@ -247,7 +281,7 @@ Crafty.e("Controller");
 
 snakeInitial();
 
-Crafty.e("PlayButton");
+const playBtn = Crafty.e("PlayButton");
 
 });
 
