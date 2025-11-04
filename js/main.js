@@ -5,42 +5,44 @@ const spanScore = document.getElementById('score');
 Crafty.init(gameWidth, gameHeight, document.getElementById('game'));
 Crafty.background('#007958 url(/resources/images/grid.png) repeat');
 
-const assetsObj = {
-    images: [
-        "../resources/images/grid.png",
-        "../resources/images/play.png"
-    ],
-    sprites: {
-        "../resources/images/tileset.png": {
-            tile: 32,
-            tileh: 32,
-            map: {
-                head: [0, 0],
-                segment: [2, 0],
-                food: [0, 1],
+Crafty.defineScene("loading", () => {
+
+    const assetsObj = {
+        images: [
+            "../resources/images/grid.png",
+            "../resources/images/play.png"
+        ],
+        sprites: {
+            "../resources/images/tileset.png": {
+                tile: 32,
+                tileh: 32,
+                map: {
+                    head: [0, 0],
+                    segment: [2, 0],
+                    food: [0, 1],
+                }
+            },
+            "../resources/images/tileset-button.png": {
+                tile: 64,
+                tileh: 64,
+                map: {
+                    play: [0, 0]
+                }
             }
         },
-        "../resources/images/tileset-button.png": {
-            tile: 64,
-            tileh: 64,
-            map: {
-                play: [0, 0]
-            }
+         audio: {
+            tick: "../resources/sounds/tick.ogg",
+            collect: "../resources/sounds/collect.ogg",
+            start: "../resources/sounds/start.ogg",
+            gameover: "../resources/sounds/gameover.ogg" 
         }
-    },
-    audio: {
-       tick: "../resources/sounds/tick.ogg",
-       collect: "../resources/sounds/collect.ogg",
-       start: "../resources/sounds/start.ogg",
-       gameover: "../resources/sounds/gameover.ogg" 
-    }
 
-};
+    };
 
-Crafty.load(assetsObj, function() {
-    Crafty.scene("Main");
+    Crafty.load(assetsObj, function() {
+        Crafty.scene("Main");
+    });
 });
-
 
 Crafty.defineScene("Main", () => {
 
@@ -51,7 +53,7 @@ let direction = "up";
 let canChangeDir = false;
 let segments = [];
 let id = -1;
-let eat;
+let eat = null;
 let score = 0;
 
 function snakeInitial() {
@@ -121,6 +123,9 @@ function withGameOver() {
     Crafty.e("dataText");
     canChangeDir = false;
     Crafty.audio.play("gameover", 1);
+    Crafty.e("Delay").delay(function() {
+        Crafty.trigger("Restart");
+    }, 2000, 1);
 }
 
 Crafty.c("Head", {
@@ -193,8 +198,11 @@ Crafty.c("Head", {
         });
         this.bind("GameOver", function() {
             this.cancelDelay(this.tick);
-        })
-        
+        });
+        this.bind("Restart", function() {
+            Crafty("*").destroy();
+            Crafty.scene("Main");
+        });
     }
 });
 
@@ -271,9 +279,6 @@ Crafty.c("Controller", {
                     direction = "down";
                 } 
             }
-            // if (e.key == Crafty.keys.R) {
-                
-            // }
             if (e.key == Crafty.keys.ENTER) {
                 if (!gameStart) {
                     gameStart = true;
@@ -324,7 +329,10 @@ snakeInitial();
 
 const playBtn = Crafty.e("PlayButton");
 
+
 });
+
+Crafty.scene("loading");
 
 
 
