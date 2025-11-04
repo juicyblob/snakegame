@@ -27,6 +27,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    user-select: none;
 
     & .stat-panel__left {
         display: flex;
@@ -66,6 +67,6 @@ body {
     }
 
     & .stat-panel__item {
-        width: 128px;
+        width: 140px;
     }
 }
