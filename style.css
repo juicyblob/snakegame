@@ -50,6 +50,14 @@ body {
             background-size: contain;
             width: 22px;
             height: 17px;
+
+            &.btn-sound__off {
+                background: url("./resources/images/sound_off.svg");
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 22px;
+                height: 17px;
+            }
         }
 
         & .btn-info {
