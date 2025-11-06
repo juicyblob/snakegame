@@ -46,10 +46,10 @@ Crafty.defineScene("loading", () => {
     const assetsObj = {
         images: [
             "./resources/images/grid.png",
-            "../resources/images/play.png"
+            "./resources/images/play.png"
         ],
         sprites: {
-            "../resources/images/tileset.png": {
+            "./resources/images/tileset.png": {
                 tile: 32,
                 tileh: 32,
                 map: {
@@ -58,7 +58,7 @@ Crafty.defineScene("loading", () => {
                     food: [0, 1],
                 }
             },
-            "../resources/images/tileset-button.png": {
+            "./resources/images/tileset-button.png": {
                 tile: 64,
                 tileh: 64,
                 map: {
@@ -67,10 +67,10 @@ Crafty.defineScene("loading", () => {
             }
         },
          audio: {
-            tick: "../resources/sounds/tick.ogg",
-            collect: "../resources/sounds/collect.ogg",
-            start: "../resources/sounds/start.ogg",
-            gameover: "../resources/sounds/gameover.ogg" 
+            tick: "./resources/sounds/tick.ogg",
+            collect: "./resources/sounds/collect.ogg",
+            start: "./resources/sounds/start.ogg",
+            gameover: "./resources/sounds/gameover.ogg" 
         }
 
     };
