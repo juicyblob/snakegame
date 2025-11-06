@@ -17,7 +17,21 @@ body {
     background-color: #004645;
 }
 
+.game-title {
+    width: 640px;
+    font-size: 2.4rem;
+    text-transform: uppercase;
+    color: #e7e7e7;
+    margin-bottom: 12px;
+}
+
+.stat-panel-container {
+    position: relative;
+    z-index: 20;
+}
+
 .stat-panel {
+    position: relative;
     width: 640px;
     font-size: 1.4rem;
     padding: 16px 32px;
@@ -77,4 +91,54 @@ body {
     & .stat-panel__item {
         width: 140px;
     }
+
+    & .stat-panel__info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        font-size: 1rem;
+        line-height: 0.4rem;
+        background-color: rgba(29, 43, 83, 0.6);
+        color: #d8d8d8;
+        padding: 15px 15px 15px 40px;
+        max-height: 0;
+        transition: all .4s ease-in;
+
+        &.stat-panel__info-show {
+            top: 56px;
+            max-height: 120px;
+            line-height: 1.1rem;
+        }
+
+        & .btn-close {
+            border: none;
+            outline: none;
+            appearance: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #FFFFFF;
+            font-size: 1.2rem;
+            position: absolute;
+            top: 10px;
+            right: 30px;
+        }
+    }
+
+
+}
+
+.control-info {
+   width: 640px;
+   color: #e7e7e7;
+   font-size: 1rem;
+   line-height: 1.2rem;
+   margin-top: 24px;
+   
+   & .control-info__title {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+   }
 }

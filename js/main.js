@@ -3,6 +3,9 @@ const gameHeight = 480;
 const spanScore = document.getElementById('score');
 const spanBest = document.getElementById('best');
 const btnSound = document.querySelector('.btn-sound');
+const btnInfo = document.querySelector('.btn-info');
+const panelInfo = document.querySelector('.stat-panel__info');
+const btnClose = document.querySelector('.btn-close');
 
 Crafty.init(gameWidth, gameHeight, document.getElementById('game'));
 Crafty.background('#007958 url(/resources/images/grid.png) repeat');
@@ -27,6 +30,14 @@ const storage = {
 btnSound.addEventListener("click", function() {
     this.classList.toggle('btn-sound__off');
     Crafty.audio.toggleMute();
+});
+
+btnInfo.addEventListener("click", function() {
+    panelInfo.classList.toggle("stat-panel__info-show");
+});
+
+btnClose.addEventListener("click", function() {
+    panelInfo.classList.remove("stat-panel__info-show");
 });
 
 
