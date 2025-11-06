@@ -8,7 +8,7 @@ const panelInfo = document.querySelector('.stat-panel__info');
 const btnClose = document.querySelector('.btn-close');
 
 Crafty.init(gameWidth, gameHeight, document.getElementById('game'));
-Crafty.background('#007958 url(/resources/images/grid.png) repeat');
+Crafty.background('#007958 url(./resources/images/grid.png) repeat');
 
 const storage = {
     key: "bestScore",
@@ -45,7 +45,7 @@ Crafty.defineScene("loading", () => {
 
     const assetsObj = {
         images: [
-            "../resources/images/grid.png",
+            "./resources/images/grid.png",
             "../resources/images/play.png"
         ],
         sprites: {
