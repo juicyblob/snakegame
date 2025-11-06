@@ -7,6 +7,29 @@ const btnSound = document.querySelector('.btn-sound');
 Crafty.init(gameWidth, gameHeight, document.getElementById('game'));
 Crafty.background('#007958 url(/resources/images/grid.png) repeat');
 
+const storage = {
+    key: "bestScore",
+    get value() {
+        let best = localStorage.getItem(this.key);
+        if (best) {
+            return Number(best);
+        } else {
+            localStorage.setItem(this.key, 0);
+            return 0;
+        } 
+    },
+    set value(newScore) {
+        let best = localStorage.getItem(this.key);
+        if (newScore > best) localStorage.setItem(this.key, newScore);
+    }
+}
+
+btnSound.addEventListener("click", function() {
+    this.classList.toggle('btn-sound__off');
+    Crafty.audio.toggleMute();
+});
+
+
 Crafty.defineScene("loading", () => {
 
     const assetsObj = {
@@ -48,13 +71,7 @@ Crafty.defineScene("loading", () => {
 
 Crafty.defineScene("Main", () => {
 
-btnSound.addEventListener("click", function() {
-    this.classList.toggle('btn-sound__off');
-    Crafty.audio.toggleMute();
-});
-
 const baseSize = 32;
-const glif = "0x011";
 let gameStart = false;
 let gameOver = false;
 let direction = "up";
@@ -65,6 +82,7 @@ let eat = null;
 let score = 0;
 
 spanScore.textContent = score;
+spanBest.textContent = storage.value;
 
 function snakeInitial() {
     segments.push(Crafty.e("Head"));
@@ -133,6 +151,7 @@ function withGameOver() {
     Crafty.e("dataText");
     canChangeDir = false;
     Crafty.audio.play("gameover", 1);
+    storage.value = score;
     Crafty.e("Delay").delay(function() {
         Crafty.trigger("Restart");
     }, 2500, 1);
